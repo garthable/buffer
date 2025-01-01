@@ -180,23 +180,192 @@ TEST(BufferSet, IndexSet)
     }
 }
 
-TEST(BufferSet, Push)
+TEST(BufferIterator, BeginMut)
 {
+    sbuf::Buffer<int, 10> buffer({1, 2, 3, 4, 5});
+    auto iterator = buffer.begin();
+    EXPECT_EQ(*iterator, 1);
+}
 
+TEST(BufferIterator, BeginConst)
+{
+    const sbuf::Buffer<int, 10> buffer({1, 2, 3, 4, 5});
+    auto iterator = buffer.begin();
+    EXPECT_EQ(*iterator, 1);
+}
+
+TEST(BufferIterator, EndMut)
+{
+    sbuf::Buffer<int, 10> buffer({1, 2, 3, 4, 5});
+    auto iterator = buffer.end();
+    EXPECT_EQ(*(iterator - 1), 5);
+}
+
+TEST(BufferIterator, EndConst)
+{
+    const sbuf::Buffer<int, 10> buffer({1, 2, 3, 4, 5});
+    auto iterator = buffer.end();
+    EXPECT_EQ(*(iterator - 1), 5);
+}
+
+TEST(BufferSet, PushBack)
+{
+    sbuf::Buffer<int, 10> bufferA({1, 2, 3, 4});
+    sbuf::Buffer<int, 10> bufferB({1, 2, 3, 4, 5});
+
+    bufferA.pushBack(5);
+    EXPECT_EQ(bufferA, bufferB);
+}
+
+TEST(BufferSet, PushFront)
+{
+    sbuf::Buffer<int, 10> bufferA({2, 3, 4, 5});
+    sbuf::Buffer<int, 10> bufferB({1, 2, 3, 4, 5});
+
+    bufferA.pushFront(1);
+    EXPECT_EQ(bufferA, bufferB);
 }
 
 TEST(BufferSet, Pop)
 {
-    int v = 0;
-    std::iterator<std::input_iterator_tag, int> a();
+    sbuf::Buffer<int, 10> bufferA({1, 2, 3, 4, 5});
+    sbuf::Buffer<int, 10> bufferB({1, 2, 3, 4});
+
+    bufferA.pop();
+
+    EXPECT_EQ(bufferA, bufferB);
 }
 
 TEST(BufferSet, Insert)
 {
-    
+    sbuf::Buffer<int, 10> bufferA({1, 2, 4, 5});
+    sbuf::Buffer<int, 10> bufferB({1, 2, 3, 4, 5});
+
+    bufferA.insert(2, 3);
+
+    EXPECT_EQ(bufferA, bufferB);
+
+    sbuf::Buffer<int, 10> bufferC({2, 3, 4, 5});
+    sbuf::Buffer<int, 10> bufferD({1, 2, 3, 4, 5});
+
+    bufferC.insert(0, 1);
+
+    EXPECT_EQ(bufferC, bufferD);
+
+    sbuf::Buffer<int, 10> bufferE({1, 2, 3, 4});
+    sbuf::Buffer<int, 10> bufferF({1, 2, 3, 4, 5});
+
+    bufferE.insert(4, 5);
+
+    EXPECT_EQ(bufferE, bufferF);
 }
 
 TEST(BufferSet, Erase)
 {
-    
+    sbuf::Buffer<int, 10> bufferA({1, 2, 4, 5});
+    sbuf::Buffer<int, 10> bufferB({1, 2, 3, 4, 5});
+
+    bufferB.erase(2);
+
+    EXPECT_EQ(bufferA, bufferB);
+
+    sbuf::Buffer<int, 10> bufferC({2, 3, 4, 5});
+    sbuf::Buffer<int, 10> bufferD({1, 2, 3, 4, 5});
+
+    bufferD.erase(0);
+
+    EXPECT_EQ(bufferC, bufferD);
+
+    sbuf::Buffer<int, 10> bufferE({1, 2, 3, 4});
+    sbuf::Buffer<int, 10> bufferF({1, 2, 3, 4, 5});
+
+    bufferF.erase(4);
+
+    EXPECT_EQ(bufferE, bufferF);
+}
+
+struct Struct
+{
+    Struct() {};
+    Struct(int a, int b) : a(a), b(b) {}
+    int a, b;
+
+    bool operator==(Struct s) const
+    {
+        return a == s.a && b == s.b;
+    }
+    friend std::ostream& operator<<(std::ostream &out, const Struct& obj)
+    {
+        out << "( " << obj.a << ", " << obj.b << " )";
+        return out;
+    }
+};
+
+TEST(BufferSet, EmplaceBack)
+{
+    sbuf::Buffer<Struct, 10> bufferA({Struct(1, 1)});
+    sbuf::Buffer<Struct, 10> bufferB({Struct(1, 1), Struct(2, 2)});
+
+    bufferA.emplaceBack(2, 2);
+
+    EXPECT_EQ(bufferA, bufferB);
+}
+
+TEST(BufferSet, EmplaceFront)
+{
+    sbuf::Buffer<Struct, 10> bufferA({Struct(2, 2)});
+    sbuf::Buffer<Struct, 10> bufferB({Struct(1, 1), Struct(2, 2)});
+
+    bufferA.emplaceFront(1, 1);
+
+    EXPECT_EQ(bufferA, bufferB);
+}
+
+TEST(BufferSet, Emplace)
+{
+    sbuf::Buffer<Struct, 10> bufferA({Struct(1, 1), Struct(3, 3)});
+    sbuf::Buffer<Struct, 10> bufferB({Struct(1, 1), Struct(2, 2), Struct(3, 3)});
+
+    bufferA.emplace(1, 2, 2);
+
+    EXPECT_EQ(bufferA, bufferB);
+
+    sbuf::Buffer<Struct, 10> bufferC({Struct(2, 2), Struct(3, 3)});
+    sbuf::Buffer<Struct, 10> bufferD({Struct(1, 1), Struct(2, 2), Struct(3, 3)});
+
+    bufferC.emplace(0, 1, 1);
+
+    EXPECT_EQ(bufferC, bufferD);
+
+    sbuf::Buffer<Struct, 10> bufferE({Struct(1, 1), Struct(2, 2)});
+    sbuf::Buffer<Struct, 10> bufferF({Struct(1, 1), Struct(2, 2), Struct(3, 3)});
+
+    bufferE.emplace(2, 3, 3);
+
+    EXPECT_EQ(bufferE, bufferF);
+}
+
+struct StructNoEqualsOrPrint
+{
+    StructNoEqualsOrPrint() {};
+    StructNoEqualsOrPrint(int a, int b) : a(a), b(b) {}
+    int a, b;
+};
+
+// Compiler check
+TEST(BufferSFINAE, NoEqualsOrPrint)
+{
+    sbuf::Buffer<StructNoEqualsOrPrint, 10> buffer({StructNoEqualsOrPrint(1, 1)});
+
+    EXPECT_EQ(buffer, buffer);
+}
+
+struct Generic {};
+
+TEST(BufferSFINAE, Generic)
+{
+    sbuf::Buffer<Generic, 10> buffer({(Generic){}});
+
+    EXPECT_EQ(buffer, buffer);
+    EXPECT_EQ(buffer.size(), 1);
 }
