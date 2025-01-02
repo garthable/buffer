@@ -124,7 +124,12 @@ public:
         {
             return m_ptr >= other.m_ptr;
         }
-
+    public:
+        typedef T value_type;
+        typedef T difference_type;
+        typedef T* pointer;
+        typedef T& reference;
+        typedef std::forward_iterator_tag iterator_category;
     private:
         T* m_ptr;
     };
@@ -270,22 +275,24 @@ public:
         }
         return true;
     }
-    // template<typename U = T>
-    // inline bool operator==(const Buffer<U, CAPACITY>& other)
-    // {
-    //     if (other.m_size != m_size) 
-    //     {
-    //         return false;
-    //     }
-    //     for (size_t i = 0; i < m_size; i++)
-    //     {
-    //         if (!(m_array[i] == other.m_array[i]))
-    //         {
-    //             return false;
-    //         }
-    //     }
-    //     return true;
-    // }
+    template<typename U = T, size_t C>
+    std::enable_if<HasEquals<U>::value, 
+            bool>::type
+    operator==(const Buffer<U, C>& other)
+    {
+        if (other.m_size != m_size) 
+        {
+            return false;
+        }
+        for (size_t i = 0; i < m_size; i++)
+        {
+            if (!(m_array[i] == other.m_array[i]))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
     template<typename U = T, size_t C>
     std::enable_if<!HasEquals<U>::value, 
             bool>::type
@@ -322,22 +329,24 @@ public:
         }
         return true;
     }
-    //template<typename U = T>
-    // inline bool operator==(const std::initializer_list<U>& initList)
-    // {
-    //     if (initList.size() != m_size) 
-    //     {
-    //         return false;
-    //     }
-    //     for (size_t i = 0; i < m_size; i++)
-    //     {
-    //         if (!(m_array[i] == *(initList.begin() + i)))
-    //         {
-    //             return false;
-    //         }
-    //     }
-    //     return true;
-    // }
+    template<typename U = T>
+    std::enable_if<HasEquals<U>::value, 
+            bool>::type
+    operator==(const std::initializer_list<U>& initList)
+    {
+        if (initList.size() != m_size) 
+        {
+            return false;
+        }
+        for (size_t i = 0; i < m_size; i++)
+        {
+            if (!(m_array[i] == *(initList.begin() + i)))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
     template<typename U = T>
     std::enable_if<!HasEquals<U>::value, 
