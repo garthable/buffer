@@ -11,32 +11,17 @@
 namespace sbuf 
 {
 
-// https://stackoverflow.com/questions/257288/how-can-you-check-whether-a-templated-class-has-a-member-function
-template<typename T>
-class HasEquals
-{
-    typedef char one;
-    typedef long two;
+template <typename T, typename = void>
+struct HasEquals : std::false_type {};
 
-    template <typename C> static one test( decltype(&C::operator==) ) ;
-    template <typename C> static two test(...);    
+template <typename T>
+struct HasEquals<T, std::void_t<decltype(std::declval<T>() == std::declval<T>())>> : std::true_type {};
 
-public:
-    enum { value = sizeof(test<T>(0)) == sizeof(char) };
-};
+template <typename T, typename = void>
+struct Printable : std::false_type {};
 
-template<typename T>
-class HasStream
-{
-    typedef char one;
-    typedef long two;
-
-    template <typename C> static one test( decltype(&C::operator<<) ) ;
-    template <typename C> static two test(...);    
-
-public:
-    enum { value = sizeof(test<T>(0)) == sizeof(char) };
-};
+template <typename T>
+struct Printable<T, std::void_t<decltype(std::cout << std::declval<T>())>> : std::true_type {};
 
 template<typename T, size_t CAPACITY>
 class Buffer
@@ -79,6 +64,10 @@ public:
             m_ptr += i;
             return *this;
         }
+        ssize_t operator+(const Iterator& ptr) const
+        {
+            return m_ptr + ptr.m_ptr;
+        }
         Iterator operator-(long i) const
         {
             return Iterator(m_ptr - i);
@@ -87,6 +76,10 @@ public:
         {
             m_ptr -= i;
             return *this;
+        }
+        ssize_t operator-(const Iterator& ptr) const
+        {
+            return m_ptr - ptr.m_ptr;
         }
         T& operator[](size_t index)
         {
@@ -170,6 +163,10 @@ public:
             m_ptr += i;
             return *this;
         }
+        ssize_t operator+(const ConstIterator& ptr) const
+        {
+            return m_ptr + ptr.m_ptr;
+        }
         ConstIterator operator-(long i) const
         {
             return ConstIterator(m_ptr - i);
@@ -178,6 +175,10 @@ public:
         {
             m_ptr -= i;
             return *this;
+        }
+        ssize_t operator-(const ConstIterator& ptr) const
+        {
+            return m_ptr - ptr.m_ptr;
         }
         const T& operator[](size_t index)
         {
@@ -262,13 +263,13 @@ public:
             bool>::type
     operator==(const Buffer<U, C>& other) const
     {
-        if (other.m_size != m_size) 
+        if (other.size() != m_size) 
         {
             return false;
         }
         for (size_t i = 0; i < m_size; i++)
         {
-            if (!(m_array[i] == other.m_array[i]))
+            if (!(m_array[i] == other[i]))
             {
                 return false;
             }
@@ -280,13 +281,13 @@ public:
             bool>::type
     operator==(const Buffer<U, C>& other)
     {
-        if (other.m_size != m_size) 
+        if (other.size() != m_size) 
         {
             return false;
         }
         for (size_t i = 0; i < m_size; i++)
         {
-            if (!(m_array[i] == other.m_array[i]))
+            if (!(m_array[i] == other[i]))
             {
                 return false;
             }
@@ -298,13 +299,13 @@ public:
             bool>::type
     operator==(const Buffer<U, C>& other) const
     {
-        if (other.m_size != m_size) 
+        if (other.size() != m_size) 
         {
             return false;
         }
         for (size_t i = 0; i < m_size; i++)
         {
-            if (!(memcmp(&m_array[i], &other.m_array[i], sizeof(U)) == 0))
+            if (!(memcmp(&m_array[i], &other[i], sizeof(U)) == 0))
             {
                 return false;
             }
@@ -497,7 +498,7 @@ private:
 };
 
 template<typename T, size_t CAPACITY>
-std::enable_if<HasStream<T>::value, 
+std::enable_if<Printable<T>::value, 
         std::ostream&>::type
 operator<<(std::ostream &out, const Buffer<T, CAPACITY>& obj)
 {
