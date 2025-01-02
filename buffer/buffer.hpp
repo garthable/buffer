@@ -753,7 +753,7 @@ public:
     } 
 
     /**
-     * @brief Accesses index of array
+     * @brief Accesses element of array
      * 
      * @param index
      * @return T& 
@@ -769,7 +769,7 @@ public:
         return m_array[i];
     }
     /** 
-     * @brief Accesses index of array
+     * @brief Accesses element of array
      * 
      * @param index
      * @return const T&
@@ -803,7 +803,7 @@ public:
         return CAPACITY;
     }
     /**
-     * @brief Returns last value of array
+     * @brief Returns last element
      * 
      * @return T& 
      */
@@ -812,7 +812,7 @@ public:
         return m_array[m_size-1];
     }
     /**
-     * @brief Returns last value in array
+     * @brief Returns last element
      * 
      * @return const T& 
      */
@@ -821,7 +821,7 @@ public:
         return m_array[m_size-1];
     }
     /**
-     * @brief Returns first value in array
+     * @brief Returns first element
      * 
      * @return T& 
      */
@@ -830,7 +830,7 @@ public:
         return m_array[0];
     }
     /**
-     * @brief Returns first value in array
+     * @brief Returns first element
      * 
      * @return const T& 
      */
@@ -850,11 +850,35 @@ public:
         m_size++;
     }
     /**
+     * @brief Adds element to back of buffer and increases size
+     * 
+     * @param element
+     */
+    inline void pushBack(T&& element)
+    {
+        m_array[m_size] = element;
+        m_size++;
+    }
+    /**
      * @brief Adds element to front of buffer and increases size
      * 
      * @param element 
      */
     inline void pushFront(const T& element)
+    {
+        for (size_t i = m_size-1; i != SIZE_MAX; i--) 
+        {
+            m_array[i + 1] = m_array[i];
+        }
+        m_array[0] = element;
+        m_size++;
+    }
+    /**
+     * @brief Adds element to front of buffer and increases size
+     * 
+     * @param element 
+     */
+    inline void pushFront(T&& element)
     {
         for (size_t i = m_size-1; i != SIZE_MAX; i--) 
         {
@@ -890,6 +914,21 @@ public:
      * @param element
      */
     inline void insert(size_t index, const T& element)
+    {
+        for (size_t i = m_size-1; i >= index && i != index-1u; i--) 
+        {
+            m_array[i + 1] = m_array[i];
+        }
+        m_array[index] = element;
+        m_size++;
+    }
+    /**
+     * @brief Inserts element into array
+     * 
+     * @param index 
+     * @param element
+     */
+    inline void insert(size_t index, T&& element)
     {
         for (size_t i = m_size-1; i >= index && i != index-1u; i--) 
         {
