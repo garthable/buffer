@@ -1,5 +1,5 @@
-#ifndef BUFFER
-#define BUFFER
+#ifndef SBUF_BUFFER
+#define SBUF_BUFFER
 
 #include <exception>
 #include <algorithm>
@@ -64,89 +64,198 @@ public:
     class Iterator
     {
     public:
+        /**
+         * @brief Construct a new Iterator object
+         * 
+         * @param ptr pointer located in buffer container
+         */
         Iterator(T* ptr) :
             m_ptr(ptr)
         {}
+        /**
+         * @brief Iterates pointer forward by one
+         * 
+         * @return Iterator& reference to self
+         */
         Iterator& operator++()
         {
             m_ptr++;
             return *this;
         }
+        /**
+         * @brief Iterates pointer forward by one
+         * 
+         * @return Iterator copy of self
+         */
         Iterator operator++(int)
         {
             Iterator iterator = *this;
             ++(*this);
             return iterator;
         }
+        /**
+         * @brief Decrements pointer backwards by one
+         * 
+         * @return Iterator& reference to self
+         */
         Iterator& operator--()
         {
             m_ptr--;
             return *this;
         }
+        /**
+         * @brief Decrements pointer backwards by one
+         * 
+         * @return Iterator copy of self
+         */
         Iterator operator--(int)
         {
             Iterator iterator = *this;
             --(*this);
             return iterator;
         }
+        /**
+         * @brief Increments copy pointer forward by i
+         * 
+         * @param i amount forward
+         * @return Iterator copy of self
+         */
         Iterator operator+(long i) const
         {
             return Iterator(m_ptr + i);
         }
+        /**
+         * @brief Increments pointer forward by i
+         * 
+         * @param i amount forward
+         * @return Iterator& reference to self
+         */
         Iterator& operator+=(long i)
         {
             m_ptr += i;
             return *this;
         }
-        ssize_t operator+(const Iterator& ptr) const
-        {
-            return m_ptr + ptr.m_ptr;
-        }
+        /**
+         * @brief Decrements copy pointer backwards by i
+         * 
+         * @param i amount backward
+         * @return Iterator copy of self
+         */
         Iterator operator-(long i) const
         {
             return Iterator(m_ptr - i);
         }
+        /**
+         * @brief Decrements pointer backwards by i
+         * 
+         * @param i amount backward
+         * @return Iterator& reference to self
+         */
         Iterator& operator-=(long i)
         {
             m_ptr -= i;
             return *this;
         }
+        /**
+         * @brief Finds difference between self and other iterator
+         * 
+         * @param ptr other iterator
+         * @return ssize_t difference between iterators
+         */
         ssize_t operator-(const Iterator& ptr) const
         {
             return m_ptr - ptr.m_ptr;
         }
+        /**
+         * @brief Gets T& value an amount forward from iterator
+         * 
+         * @param index amount forward from pointer
+         * @return T& reference type
+         */
         T& operator[](size_t index)
         {
             return *(m_ptr + index);
         }
+        /**
+         * @brief Accesses pointers type internals
+         * 
+         * @return T* pointer type
+         */
         T* operator->()
         {
             return m_ptr;
         }
+        /**
+         * @brief Dereferences pointer
+         * 
+         * @return T& reference type
+         */
         T& operator*()
         {
             return *m_ptr;
         }
+        /**
+         * @brief Checks if iterators are equal
+         * 
+         * @param other 
+         * @return true 
+         * @return false 
+         */
         bool operator==(const Iterator& other) const
         {
             return m_ptr == other.m_ptr;
         }
+        /**
+         * @brief Checks if iterators are not equal
+         * 
+         * @param other 
+         * @return true 
+         * @return false 
+         */
         bool operator!=(const Iterator& other) const
         {
             return m_ptr != other.m_ptr;
         }
+        /**
+         * @brief Checks if iterator is less than this iterator
+         * 
+         * @param other 
+         * @return true 
+         * @return false 
+         */
         bool operator>(const Iterator& other) const
         {
             return m_ptr > other.m_ptr;
         }
+        /**
+         * @brief Checks if iterator is less than or equal this iterator
+         * 
+         * @param other 
+         * @return true 
+         * @return false 
+         */
         bool operator>=(const Iterator& other) const
         {
             return m_ptr >= other.m_ptr;
         }
+        /**
+         * @brief Checks if iterator is greater than this iterator
+         * 
+         * @param other 
+         * @return true 
+         * @return false 
+         */
         bool operator<(const Iterator& other) const
         {
             return m_ptr > other.m_ptr;
         }
+        /**
+         * @brief Checks if iterator is greater than or equal to this iterator
+         * 
+         * @param other 
+         * @return true 
+         * @return false 
+         */
         bool operator<=(const Iterator& other) const
         {
             return m_ptr >= other.m_ptr;
@@ -158,6 +267,10 @@ public:
         typedef T& reference;
         typedef std::forward_iterator_tag iterator_category;
     private:
+        /**
+         * @brief Pointer to where iterator is.
+         * 
+         */
         T* m_ptr;
     };
     /**
@@ -167,89 +280,198 @@ public:
     class ConstIterator
     {
     public:
+        /**
+         * @brief Construct a new Iterator object
+         * 
+         * @param ptr pointer located in buffer container
+         */
         ConstIterator(const T* ptr) :
             m_ptr(ptr)
         {}
+        /**
+         * @brief Iterates pointer forward by one
+         * 
+         * @return ConstIterator& reference to self
+         */
         ConstIterator& operator++()
         {
             m_ptr++;
             return *this;
         }
+        /**
+         * @brief Iterates pointer forward by one
+         * 
+         * @return ConstIterator copy of self
+         */
         ConstIterator operator++(int)
         {
             ConstIterator iterator = *this;
             ++(*this);
             return iterator;
         }
+        /**
+         * @brief Decrements pointer backwards by one
+         * 
+         * @return ConstIterator& reference to self
+         */
         ConstIterator& operator--()
         {
             m_ptr--;
             return *this;
         }
+        /**
+         * @brief Decrements pointer backwards by one
+         * 
+         * @return ConstIterator copy of self
+         */
         ConstIterator operator--(int)
         {
             ConstIterator iterator = *this;
             --(*this);
             return iterator;
         }
+        /**
+         * @brief Increments copy pointer forward by i
+         * 
+         * @param i amount forward
+         * @return ConstIterator copy of self
+         */
         ConstIterator operator+(long i) const
         {
             return ConstIterator(m_ptr + i);
         }
+        /**
+         * @brief Increments pointer forward by i
+         * 
+         * @param i amount forward
+         * @return ConstIterator& reference to self
+         */
         ConstIterator& operator+=(long i)
         {
             m_ptr += i;
             return *this;
         }
-        ssize_t operator+(const ConstIterator& ptr) const
-        {
-            return m_ptr + ptr.m_ptr;
-        }
+        /**
+         * @brief Decrements copy pointer backwards by i
+         * 
+         * @param i amount backward
+         * @return ConstIterator copy of self
+         */
         ConstIterator operator-(long i) const
         {
             return ConstIterator(m_ptr - i);
         }
+        /**
+         * @brief Decrements pointer backwards by i
+         * 
+         * @param i amount backward
+         * @return ConstIterator& reference to self
+         */
         ConstIterator& operator-=(long i)
         {
             m_ptr -= i;
             return *this;
         }
+        /**
+         * @brief Finds difference between self and other iterator
+         * 
+         * @param ptr other iterator
+         * @return ssize_t difference between iterators
+         */
         ssize_t operator-(const ConstIterator& ptr) const
         {
             return m_ptr - ptr.m_ptr;
         }
+        /**
+         * @brief Gets T& value an amount forward from iterator
+         * 
+         * @param index amount forward from pointer
+         * @return T& reference type
+         */
         const T& operator[](size_t index)
         {
             return *(m_ptr + index);
         }
-        const T* operator->() const
+        /**
+         * @brief Accesses pointers type internals
+         * 
+         * @return T* pointer type
+         */
+        const T* operator->()
         {
             return m_ptr;
         }
-        const T& operator*() const
+        /**
+         * @brief Dereferences pointer
+         * 
+         * @return T& reference type
+         */
+        const T& operator*()
         {
             return *m_ptr;
         }
+        /**
+         * @brief Checks if iterators are equal
+         * 
+         * @param other 
+         * @return true 
+         * @return false 
+         */
         bool operator==(const ConstIterator& other) const
         {
             return m_ptr == other.m_ptr;
         }
+        /**
+         * @brief Checks if iterators are not equal
+         * 
+         * @param other 
+         * @return true 
+         * @return false 
+         */
         bool operator!=(const ConstIterator& other) const
         {
             return m_ptr != other.m_ptr;
         }
+        /**
+         * @brief Checks if iterator is less than this iterator
+         * 
+         * @param other 
+         * @return true 
+         * @return false 
+         */
         bool operator>(const ConstIterator& other) const
         {
             return m_ptr > other.m_ptr;
         }
+        /**
+         * @brief Checks if iterator is less than or equal this iterator
+         * 
+         * @param other 
+         * @return true 
+         * @return false 
+         */
         bool operator>=(const ConstIterator& other) const
         {
             return m_ptr >= other.m_ptr;
         }
+        /**
+         * @brief Checks if iterator is greater than this iterator
+         * 
+         * @param other 
+         * @return true 
+         * @return false 
+         */
         bool operator<(const ConstIterator& other) const
         {
             return m_ptr > other.m_ptr;
         }
+        /**
+         * @brief Checks if iterator is greater than or equal to this iterator
+         * 
+         * @param other 
+         * @return true 
+         * @return false 
+         */
         bool operator<=(const ConstIterator& other) const
         {
             return m_ptr >= other.m_ptr;
@@ -261,6 +483,10 @@ public:
         typedef const T& reference;
         typedef std::input_iterator_tag iterator_category;
     private:
+        /**
+         * @brief Pointer to where iterator is.
+         * 
+         */
         const T* m_ptr;
     };
 public:
