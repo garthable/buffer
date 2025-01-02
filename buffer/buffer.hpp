@@ -252,7 +252,7 @@ public:
         m_size = other.m_size;
     }
 
-    template<typename U = T, size_t C = CAPACITY>
+    template<typename U = T, size_t C>
     std::enable_if<HasEquals<U>::value, 
             bool>::type
     operator==(const Buffer<U, C>& other) const
@@ -286,7 +286,7 @@ public:
     //     }
     //     return true;
     // }
-    template<typename U = T, size_t C = CAPACITY>
+    template<typename U = T, size_t C>
     std::enable_if<!HasEquals<U>::value, 
             bool>::type
     operator==(const Buffer<U, C>& other) const

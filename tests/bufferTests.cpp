@@ -362,10 +362,20 @@ TEST(BufferSFINAE, NoEqualsOrPrint)
 
 struct Generic {};
 
-TEST(BufferSFINAE, Generic)
+TEST(BufferSFINAE, GenericTest)
 {
     sbuf::Buffer<Generic, 10> buffer({(Generic){}});
 
     EXPECT_EQ(buffer, buffer);
     EXPECT_EQ(buffer.size(), 1);
+}
+
+#include <algorithm>
+
+TEST(BufferAlgorithm, find)
+{
+    sbuf::Buffer<int, 10> buffer({1, 2, 3, 4, 5});
+    auto iterator = std::find(buffer.begin(), buffer.end(), 2);
+
+    EXPECT_EQ(*iterator, 2);
 }
