@@ -11,22 +11,56 @@
 namespace sbuf 
 {
 
+/**
+ * @brief SFINAE check for whether or not object has an operator==(T) (False).
+ * If this struct is chosen buffer class will determine if two buffers are equal by using memcmp instead of operator===(T).
+ * 
+ * @tparam T type.
+ */
 template <typename T, typename = void>
 struct HasEquals : std::false_type {};
 
+/**
+ * @brief SFINAE check for whether or not object has an operator==(T) (True).
+ * If this struct is chosen buffer class will determine if two buffers are equal by using operator==(T).
+ * 
+ * @tparam T type.
+ */
 template <typename T>
 struct HasEquals<T, std::void_t<decltype(std::declval<T>() == std::declval<T>())>> : std::true_type {};
 
+/**
+ * @brief SFINAE check for whether or not object is printable via std::cout << T (False).
+ * If this struct is chosen Buffer class will not be printable.
+ * 
+ * @tparam T type.
+ */
 template <typename T, typename = void>
 struct Printable : std::false_type {};
 
+/**
+ * @brief SFINAE check for whether or not object is printable via std::cout << T (True).
+ * If this struct is chosen Buffer class will be printable.
+ * 
+ * @tparam T type.
+ */
 template <typename T>
 struct Printable<T, std::void_t<decltype(std::cout << std::declval<T>())>> : std::true_type {};
 
+/**
+ * @brief Vector like container that is stored on the stack rather than the heap. 
+ * 
+ * @tparam T 
+ * @tparam CAPACITY 
+ */
 template<typename T, size_t CAPACITY>
 class Buffer
 {
 public:
+    /**
+     * @brief Forward iterator for buffer container.
+     * 
+     */
     class Iterator
     {
     public:
@@ -126,6 +160,10 @@ public:
     private:
         T* m_ptr;
     };
+    /**
+     * @brief Input iterator for buffer container.
+     * 
+     */
     class ConstIterator
     {
     public:
@@ -216,7 +254,12 @@ public:
         {
             return m_ptr >= other.m_ptr;
         }
-
+    public:
+        typedef const T value_type;
+        typedef const T difference_type;
+        typedef const T* pointer;
+        typedef const T& reference;
+        typedef std::input_iterator_tag iterator_category;
     private:
         const T* m_ptr;
     };
