@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "SVector.hpp"
+#include "sVector.hpp"
 
 TEST(SVectorConstructor, DefaultConstructor) 
 {
