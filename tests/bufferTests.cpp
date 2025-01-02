@@ -372,10 +372,21 @@ TEST(BufferSFINAE, GenericTest)
 
 #include <algorithm>
 
-TEST(BufferAlgorithm, find)
+TEST(BufferAlgorithm, Find)
 {
     sbuf::Buffer<int, 10> buffer({1, 2, 3, 4, 5});
     auto iterator = std::find(buffer.begin(), buffer.end(), 2);
 
     EXPECT_EQ(*iterator, 2);
+}
+
+TEST(BufferAlgorithm, HeapSort)
+{
+    sbuf::Buffer<int, 10> bufferA({5, 3, 2, 4, 1});
+    sbuf::Buffer<int, 9> bufferB({1, 2, 3, 4, 5});
+
+    std::make_heap(bufferA.begin(), bufferA.end());
+    std::sort_heap(bufferA.begin(), bufferA.end());
+
+    EXPECT_EQ(bufferA, bufferB);
 }
