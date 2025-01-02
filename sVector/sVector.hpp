@@ -1,8 +1,6 @@
 #ifndef SVEC_SVECTOR
 #define SVEC_SVECTOR
 
-#define _DEBUG
-
 #include <iostream>
 #include <type_traits>
 #include <cstring>
