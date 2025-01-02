@@ -1,5 +1,5 @@
-#ifndef SBUF_BUFFER
-#define SBUF_BUFFER
+#ifndef SBUF_SVector
+#define SBUF_SVector
 
 #include <exception>
 #include <algorithm>
@@ -8,12 +8,12 @@
 #include <type_traits>
 #include <cstring>
 
-namespace sbuf 
+namespace svec 
 {
 
 /**
  * @brief SFINAE check for whether or not object has an operator==(T) (False).
- * If this struct is chosen buffer class will determine if two buffers are equal by using memcmp instead of operator===(T).
+ * If this struct is chosen SVector class will determine if two SVectors are equal by using memcmp instead of operator===(T).
  * 
  * @tparam T type.
  */
@@ -22,7 +22,7 @@ struct HasEquals : std::false_type {};
 
 /**
  * @brief SFINAE check for whether or not object has an operator==(T) (True).
- * If this struct is chosen buffer class will determine if two buffers are equal by using operator==(T).
+ * If this struct is chosen SVector class will determine if two SVectors are equal by using operator==(T).
  * 
  * @tparam T type.
  */
@@ -31,7 +31,7 @@ struct HasEquals<T, std::void_t<decltype(std::declval<T>() == std::declval<T>())
 
 /**
  * @brief SFINAE check for whether or not object is printable via std::cout << T (False).
- * If this struct is chosen Buffer class will not be printable.
+ * If this struct is chosen SVector class will not be printable.
  * 
  * @tparam T type.
  */
@@ -40,7 +40,7 @@ struct Printable : std::false_type {};
 
 /**
  * @brief SFINAE check for whether or not object is printable via std::cout << T (True).
- * If this struct is chosen Buffer class will be printable.
+ * If this struct is chosen SVector class will be printable.
  * 
  * @tparam T type.
  */
@@ -54,11 +54,11 @@ struct Printable<T, std::void_t<decltype(std::cout << std::declval<T>())>> : std
  * @tparam CAPACITY size allocated on stack
  */
 template<typename T, size_t CAPACITY>
-class Buffer
+class SVector
 {
 public:
     /**
-     * @brief Forward iterator for buffer container.
+     * @brief Forward iterator for SVector container.
      * 
      */
     class Iterator
@@ -67,7 +67,7 @@ public:
         /**
          * @brief Construct a new Iterator object
          * 
-         * @param ptr pointer located in buffer container
+         * @param ptr pointer located in SVector container
          */
         Iterator(T* ptr) :
             m_ptr(ptr)
@@ -274,7 +274,7 @@ public:
         T* m_ptr;
     };
     /**
-     * @brief Input iterator for buffer container.
+     * @brief Input iterator for SVector container.
      * 
      */
     class ConstIterator
@@ -283,7 +283,7 @@ public:
         /**
          * @brief Construct a new Iterator object
          * 
-         * @param ptr pointer located in buffer container
+         * @param ptr pointer located in SVector container
          */
         ConstIterator(const T* ptr) :
             m_ptr(ptr)
@@ -491,47 +491,47 @@ public:
     };
 public:
     /**
-     * @brief Construct a new Buffer object, initializes size to zero
+     * @brief Construct a new SVector object, initializes size to zero
      * 
      */
-    Buffer() :
+    SVector() :
         m_size{0}
     {
 
     }
     /**
-     * @brief Construct a new Buffer object, initializes size to length of initList, sets array equal to init list
+     * @brief Construct a new SVector object, initializes size to length of initList, sets array equal to init list
      * 
      * @param initList array of T values
      */
-    Buffer(std::initializer_list<T>&& initList) :
+    SVector(std::initializer_list<T>&& initList) :
         m_size{initList.size()}
     {
         std::copy(initList.begin(), initList.end(), m_array);
     }
     /**
-     * @brief Deep Copies Buffer Object
+     * @brief Deep Copies SVector Object
      * 
      * @param other 
      */
-    Buffer(const Buffer<T, CAPACITY>& other) :
+    SVector(const SVector<T, CAPACITY>& other) :
         m_size{other.m_size}
     {
         std::copy(std::begin(other.m_array), std::end(other.m_array), std::begin(m_array));
     }
     /**
-     * @brief Moves Buffer Object
+     * @brief Moves SVector Object
      * 
      * @param other 
      */
-    Buffer(Buffer<T, CAPACITY>&& other) :
+    SVector(SVector<T, CAPACITY>&& other) :
         m_array(std::move(other.m_array)),
         m_size{std::move(other.m_size)}
     {
         
     }
     /**
-     * @brief Sets Buffer Object equal to array
+     * @brief Sets SVector Object equal to array
      * 
      * @param initList 
      */
@@ -541,38 +541,38 @@ public:
         m_size = initList.size();
     }
     /**
-     * @brief Moves Buffer Object
+     * @brief Moves SVector Object
      * 
      * @param other 
      */
-    void operator=(Buffer<T, CAPACITY>&& other)
+    void operator=(SVector<T, CAPACITY>&& other)
     {
         m_array = std::move(other.m_array);
         m_size = std::move(other.m_size);
     }
     /**
-     * @brief Deep Copies Buffer Object
+     * @brief Deep Copies SVector Object
      * 
      * @param other 
      */
-    void operator=(const Buffer<T, CAPACITY>& other)
+    void operator=(const SVector<T, CAPACITY>& other)
     {
         std::copy(std::begin(other.m_array), std::end(other.m_array), std::begin(m_array));
         m_size = other.m_size;
     }
 
     /**
-     * @brief Checks if two buffers are equal. Compares values using T::operator==(T)
+     * @brief Checks if two SVectors are equal. Compares values using T::operator==(T)
      * 
      * @tparam U T
-     * @tparam C capacity of other buffer 
+     * @tparam C capacity of other SVector 
      * @param other
      * @return bool 
      */
     template<typename U = T, size_t C>
     std::enable_if<HasEquals<U>::value, 
             bool>::type
-    operator==(const Buffer<U, C>& other) const
+    operator==(const SVector<U, C>& other) const
     {
         if (other.size() != m_size) 
         {
@@ -588,17 +588,17 @@ public:
         return true;
     }
     /**
-     * @brief Checks if two buffers are equal. Compares values using T::operator==(T)
+     * @brief Checks if two SVectors are equal. Compares values using T::operator==(T)
      * 
      * @tparam U T
-     * @tparam C capacity of other buffer 
+     * @tparam C capacity of other SVector 
      * @param other 
      * @return bool
      */
     template<typename U = T, size_t C>
     std::enable_if<HasEquals<U>::value, 
             bool>::type
-    operator==(const Buffer<U, C>& other)
+    operator==(const SVector<U, C>& other)
     {
         if (other.size() != m_size) 
         {
@@ -614,7 +614,7 @@ public:
         return true;
     }
     /**
-     * @brief Checks if two buffers are equal. Compares values using memcmp
+     * @brief Checks if two SVectors are equal. Compares values using memcmp
      * 
      * @tparam U 
      * @tparam C 
@@ -624,7 +624,7 @@ public:
     template<typename U = T, size_t C>
     std::enable_if<!HasEquals<U>::value, 
             bool>::type
-    operator==(const Buffer<U, C>& other) const
+    operator==(const SVector<U, C>& other) const
     {
         if (other.size() != m_size) 
         {
@@ -640,7 +640,7 @@ public:
         return true;
     }
     /**
-     * @brief Checks if a buffer is equal to an array. Compares values using T::operator==(T)
+     * @brief Checks if a SVector is equal to an array. Compares values using T::operator==(T)
      * 
      * @tparam U T
      * @param initList 
@@ -665,7 +665,7 @@ public:
         return true;
     }
     /**
-     * @brief Checks if a buffer is equal to an array. Compares values using T::operator==(T)
+     * @brief Checks if a SVector is equal to an array. Compares values using T::operator==(T)
      * 
      * @tparam U T
      * @param initList 
@@ -690,7 +690,7 @@ public:
         return true;
     }
     /**
-     * @brief Checks if a buffer is equal to a RHV array. Compares values using memcmp
+     * @brief Checks if a SVector is equal to a RHV array. Compares values using memcmp
      * 
      * @tparam U T
      * @param initList 
@@ -785,7 +785,7 @@ public:
         return m_array[i];
     }
     /**
-     * @brief Returns size of buffer
+     * @brief Returns size of SVector
      * 
      * @return size_t 
      */
@@ -840,7 +840,7 @@ public:
     }
 
     /**
-     * @brief Adds element to back of buffer and increases size
+     * @brief Adds element to back of SVector and increases size
      * 
      * @param element
      */
@@ -850,7 +850,7 @@ public:
         m_size++;
     }
     /**
-     * @brief Adds element to back of buffer and increases size
+     * @brief Adds element to back of SVector and increases size
      * 
      * @param element
      */
@@ -860,7 +860,7 @@ public:
         m_size++;
     }
     /**
-     * @brief Adds element to front of buffer and increases size
+     * @brief Adds element to front of SVector and increases size
      * 
      * @param element 
      */
@@ -874,7 +874,7 @@ public:
         m_size++;
     }
     /**
-     * @brief Adds element to front of buffer and increases size
+     * @brief Adds element to front of SVector and increases size
      * 
      * @param element 
      */
@@ -951,7 +951,7 @@ public:
         }
     }
     /**
-     * @brief Emplaces element at the back of the buffer
+     * @brief Emplaces element at the back of the SVector
      * 
      * @tparam ARGS 
      * @param args 
@@ -963,7 +963,7 @@ public:
         m_size++;
     }
     /**
-     * @brief Emplaces element at the front of the buffer
+     * @brief Emplaces element at the front of the SVector
      * 
      * @tparam ARGS 
      * @param args 
@@ -1010,7 +1010,7 @@ private:
 };
 
 /**
- * @brief Prints buffer
+ * @brief Prints SVector
  * 
  * @tparam T 
  * @tparam CAPACITY 
@@ -1021,7 +1021,7 @@ private:
 template<typename T, size_t CAPACITY>
 std::enable_if<Printable<T>::value, 
         std::ostream&>::type
-operator<<(std::ostream &out, const Buffer<T, CAPACITY>& obj)
+operator<<(std::ostream &out, const SVector<T, CAPACITY>& obj)
 {
     out << "{";
     for (size_t i = 0; i < obj.size(); i++)
@@ -1038,4 +1038,4 @@ operator<<(std::ostream &out, const Buffer<T, CAPACITY>& obj)
 
 }
 
-#endif // BUFFER END
+#endif // SVector END
