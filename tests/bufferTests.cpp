@@ -382,9 +382,17 @@ TEST(BufferSFINAE, GenericTest)
 
 #include <algorithm>
 
-TEST(BufferAlgorithm, Find)
+TEST(BufferAlgorithm, FindMut)
 {
     sbuf::Buffer<int, 10> buffer({1, 2, 3, 4, 5});
+    auto iterator = std::find(buffer.begin(), buffer.end(), 2);
+
+    EXPECT_EQ(*iterator, 2);
+}
+
+TEST(BufferAlgorithm, FindConst)
+{
+    const sbuf::Buffer<int, 10> buffer({1, 2, 3, 4, 5});
     auto iterator = std::find(buffer.begin(), buffer.end(), 2);
 
     EXPECT_EQ(*iterator, 2);
