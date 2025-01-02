@@ -1,9 +1,8 @@
-#ifndef SBUF_SVector
-#define SBUF_SVector
+#ifndef SVEC_SVECTOR
+#define SVEC_SVECTOR
 
-#include <exception>
-#include <algorithm>
-#include <cstdint>
+#define _DEBUG
+
 #include <iostream>
 #include <type_traits>
 #include <cstring>
@@ -1038,4 +1037,4 @@ operator<<(std::ostream &out, const SVector<T, CAPACITY>& obj)
 
 }
 
-#endif // SVector END
+#endif // SVEC_SVECTOR END
