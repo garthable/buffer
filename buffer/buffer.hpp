@@ -50,8 +50,8 @@ struct Printable<T, std::void_t<decltype(std::cout << std::declval<T>())>> : std
 /**
  * @brief Vector like container that is stored on the stack rather than the heap. 
  * 
- * @tparam T 
- * @tparam CAPACITY 
+ * @tparam T type stored in container
+ * @tparam CAPACITY size allocated on stack
  */
 template<typename T, size_t CAPACITY>
 class Buffer
