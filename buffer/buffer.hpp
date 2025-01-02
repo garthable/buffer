@@ -75,7 +75,7 @@ public:
         /**
          * @brief Iterates pointer forward by one
          * 
-         * @return Iterator& reference to self
+         * @return Iterator&
          */
         Iterator& operator++()
         {
@@ -85,7 +85,7 @@ public:
         /**
          * @brief Iterates pointer forward by one
          * 
-         * @return Iterator copy of self
+         * @return Iterator
          */
         Iterator operator++(int)
         {
@@ -96,7 +96,7 @@ public:
         /**
          * @brief Decrements pointer backwards by one
          * 
-         * @return Iterator& reference to self
+         * @return Iterator&
          */
         Iterator& operator--()
         {
@@ -106,7 +106,7 @@ public:
         /**
          * @brief Decrements pointer backwards by one
          * 
-         * @return Iterator copy of self
+         * @return Iterator
          */
         Iterator operator--(int)
         {
@@ -118,7 +118,7 @@ public:
          * @brief Increments copy pointer forward by i
          * 
          * @param i amount forward
-         * @return Iterator copy of self
+         * @return Iterator
          */
         Iterator operator+(long i) const
         {
@@ -128,7 +128,7 @@ public:
          * @brief Increments pointer forward by i
          * 
          * @param i amount forward
-         * @return Iterator& reference to self
+         * @return Iterator&
          */
         Iterator& operator+=(long i)
         {
@@ -139,7 +139,7 @@ public:
          * @brief Decrements copy pointer backwards by i
          * 
          * @param i amount backward
-         * @return Iterator copy of self
+         * @return Iterator
          */
         Iterator operator-(long i) const
         {
@@ -149,7 +149,7 @@ public:
          * @brief Decrements pointer backwards by i
          * 
          * @param i amount backward
-         * @return Iterator& reference to self
+         * @return Iterator&
          */
         Iterator& operator-=(long i)
         {
@@ -160,7 +160,7 @@ public:
          * @brief Finds difference between self and other iterator
          * 
          * @param ptr other iterator
-         * @return ssize_t difference between iterators
+         * @return ssize_t
          */
         ssize_t operator-(const Iterator& ptr) const
         {
@@ -170,7 +170,7 @@ public:
          * @brief Gets T& value an amount forward from iterator
          * 
          * @param index amount forward from pointer
-         * @return T& reference type
+         * @return T&
          */
         T& operator[](size_t index)
         {
@@ -179,7 +179,7 @@ public:
         /**
          * @brief Accesses pointers type internals
          * 
-         * @return T* pointer type
+         * @return T*
          */
         T* operator->()
         {
@@ -188,7 +188,7 @@ public:
         /**
          * @brief Dereferences pointer
          * 
-         * @return T& reference type
+         * @return T&
          */
         T& operator*()
         {
@@ -291,7 +291,7 @@ public:
         /**
          * @brief Iterates pointer forward by one
          * 
-         * @return ConstIterator& reference to self
+         * @return ConstIterator&
          */
         ConstIterator& operator++()
         {
@@ -301,7 +301,7 @@ public:
         /**
          * @brief Iterates pointer forward by one
          * 
-         * @return ConstIterator copy of self
+         * @return ConstIterator
          */
         ConstIterator operator++(int)
         {
@@ -312,7 +312,7 @@ public:
         /**
          * @brief Decrements pointer backwards by one
          * 
-         * @return ConstIterator& reference to self
+         * @return ConstIterator&
          */
         ConstIterator& operator--()
         {
@@ -322,7 +322,7 @@ public:
         /**
          * @brief Decrements pointer backwards by one
          * 
-         * @return ConstIterator copy of self
+         * @return ConstIterator
          */
         ConstIterator operator--(int)
         {
@@ -334,7 +334,7 @@ public:
          * @brief Increments copy pointer forward by i
          * 
          * @param i amount forward
-         * @return ConstIterator copy of self
+         * @return ConstIterator
          */
         ConstIterator operator+(long i) const
         {
@@ -344,7 +344,7 @@ public:
          * @brief Increments pointer forward by i
          * 
          * @param i amount forward
-         * @return ConstIterator& reference to self
+         * @return ConstIterator&
          */
         ConstIterator& operator+=(long i)
         {
@@ -355,7 +355,7 @@ public:
          * @brief Decrements copy pointer backwards by i
          * 
          * @param i amount backward
-         * @return ConstIterator copy of self
+         * @return ConstIterator
          */
         ConstIterator operator-(long i) const
         {
@@ -365,7 +365,7 @@ public:
          * @brief Decrements pointer backwards by i
          * 
          * @param i amount backward
-         * @return ConstIterator& reference to self
+         * @return ConstIterator&
          */
         ConstIterator& operator-=(long i)
         {
@@ -376,7 +376,7 @@ public:
          * @brief Finds difference between self and other iterator
          * 
          * @param ptr other iterator
-         * @return ssize_t difference between iterators
+         * @return ssize_t
          */
         ssize_t operator-(const ConstIterator& ptr) const
         {
@@ -386,7 +386,7 @@ public:
          * @brief Gets T& value an amount forward from iterator
          * 
          * @param index amount forward from pointer
-         * @return T& reference type
+         * @return const T&
          */
         const T& operator[](size_t index)
         {
@@ -395,7 +395,7 @@ public:
         /**
          * @brief Accesses pointers type internals
          * 
-         * @return T* pointer type
+         * @return const T*
          */
         const T* operator->()
         {
@@ -404,7 +404,7 @@ public:
         /**
          * @brief Dereferences pointer
          * 
-         * @return T& reference type
+         * @return const T&
          */
         const T& operator*()
         {
@@ -490,43 +490,85 @@ public:
         const T* m_ptr;
     };
 public:
+    /**
+     * @brief Construct a new Buffer object, initializes size to zero
+     * 
+     */
     Buffer() :
         m_size{0}
     {
 
     }
+    /**
+     * @brief Construct a new Buffer object, initializes size to length of initList, sets array equal to init list
+     * 
+     * @param initList array of T values
+     */
     Buffer(std::initializer_list<T>&& initList) :
         m_size{initList.size()}
     {
         std::copy(initList.begin(), initList.end(), m_array);
     }
+    /**
+     * @brief Deep Copies Buffer Object
+     * 
+     * @param other 
+     */
     Buffer(const Buffer<T, CAPACITY>& other) :
         m_size{other.m_size}
     {
         std::copy(std::begin(other.m_array), std::end(other.m_array), std::begin(m_array));
     }
+    /**
+     * @brief Moves Buffer Object
+     * 
+     * @param other 
+     */
     Buffer(Buffer<T, CAPACITY>&& other) :
         m_array(std::move(other.m_array)),
         m_size{std::move(other.m_size)}
     {
         
     }
+    /**
+     * @brief Sets Buffer Object equal to array
+     * 
+     * @param initList 
+     */
     void operator=(const std::initializer_list<T>& initList)
     {
         std::copy(initList.begin(), initList.end(), std::begin(m_array));
         m_size = initList.size();
     }
+    /**
+     * @brief Moves Buffer Object
+     * 
+     * @param other 
+     */
     void operator=(Buffer<T, CAPACITY>&& other)
     {
         m_array = std::move(other.m_array);
         m_size = std::move(other.m_size);
     }
+    /**
+     * @brief Deep Copies Buffer Object
+     * 
+     * @param other 
+     */
     void operator=(const Buffer<T, CAPACITY>& other)
     {
         std::copy(std::begin(other.m_array), std::end(other.m_array), std::begin(m_array));
         m_size = other.m_size;
     }
 
+    /**
+     * @brief Checks if two buffers are equal. Compares values using T::operator==(T)
+     * 
+     * @tparam U T
+     * @tparam C capacity of other buffer 
+     * @param other
+     * @return bool 
+     */
     template<typename U = T, size_t C>
     std::enable_if<HasEquals<U>::value, 
             bool>::type
@@ -545,6 +587,14 @@ public:
         }
         return true;
     }
+    /**
+     * @brief Checks if two buffers are equal. Compares values using T::operator==(T)
+     * 
+     * @tparam U T
+     * @tparam C capacity of other buffer 
+     * @param other 
+     * @return bool
+     */
     template<typename U = T, size_t C>
     std::enable_if<HasEquals<U>::value, 
             bool>::type
@@ -563,6 +613,14 @@ public:
         }
         return true;
     }
+    /**
+     * @brief Checks if two buffers are equal. Compares values using memcmp
+     * 
+     * @tparam U 
+     * @tparam C 
+     * @param other 
+     * @return bool
+     */
     template<typename U = T, size_t C>
     std::enable_if<!HasEquals<U>::value, 
             bool>::type
@@ -581,6 +639,13 @@ public:
         }
         return true;
     }
+    /**
+     * @brief Checks if a buffer is equal to an array. Compares values using T::operator==(T)
+     * 
+     * @tparam U T
+     * @param initList 
+     * @return bool
+     */
     template<typename U = T>
     std::enable_if<HasEquals<U>::value, 
             bool>::type
@@ -599,6 +664,13 @@ public:
         }
         return true;
     }
+    /**
+     * @brief Checks if a buffer is equal to an array. Compares values using T::operator==(T)
+     * 
+     * @tparam U T
+     * @param initList 
+     * @return bool
+     */
     template<typename U = T>
     std::enable_if<HasEquals<U>::value, 
             bool>::type
@@ -617,7 +689,13 @@ public:
         }
         return true;
     }
-
+    /**
+     * @brief Checks if a buffer is equal to a RHV array. Compares values using memcmp
+     * 
+     * @tparam U T
+     * @param initList 
+     * @return bool
+     */
     template<typename U = T>
     std::enable_if<!HasEquals<U>::value, 
             bool>::type
@@ -637,95 +715,182 @@ public:
         return true;
     }
 
+    /**
+     * @brief Returns iterator at start of array
+     * 
+     * @return Iterator 
+     */
     inline Iterator begin()
     {
         return Iterator(static_cast<T*>(m_array));
     } 
+    /**
+     * @brief Returns iterator at start of array
+     * 
+     * @return ConstIterator 
+     */
     inline ConstIterator begin() const
     {
         return ConstIterator(static_cast<const T*>(m_array));
     } 
+    /**
+     * @brief Returns iterator at end of array
+     * 
+     * @return Iterator 
+     */
     inline Iterator end()
     {
         return Iterator(static_cast<T*>(m_array) + m_size);
     } 
+    /**
+     * @brief Returns iterator at end of array
+     * 
+     * @return ConstIterator 
+     */
     inline ConstIterator end() const
     {
         return ConstIterator(static_cast<const T*>(m_array) + m_size);
     } 
 
+    /**
+     * @brief Accesses index of array
+     * 
+     * @param index
+     * @return T& 
+     */
     inline T& operator[](size_t i)
     {
     #ifdef _DEBUG
         if (i >= m_size)
         {
-            throw std::out_of_range("ERROR: index " + std::to_string(i) + " is larger than capacity " + std::to_string(CAPACITY));
+            throw std::out_of_range("ERROR: index " + std::to_string(i) + " is larger than size " + std::to_string(m_size));
         }
     #endif // _DEBUG end
         return m_array[i];
     }
+    /** 
+     * @brief Accesses index of array
+     * 
+     * @param index
+     * @return const T&
+     */
     inline const T& operator[](size_t i) const
     {
     #ifdef _DEBUG
         if (i >= m_size)
         {
-            throw std::out_of_range("ERROR: index " + std::to_string(i) + " is larger than capacity " + std::to_string(CAPACITY));
+            throw std::out_of_range("ERROR: index " + std::to_string(i) + " is larger than size " + std::to_string(m_size));
         }
     #endif // _DEBUG end
         return m_array[i];
     }
+    /**
+     * @brief Returns size of buffer
+     * 
+     * @return size_t 
+     */
     inline size_t size() const
     {
         return m_size;
     }
+    /**
+     * @brief Returns size of array
+     * 
+     * @return size_t 
+     */
     inline size_t capacity() const
     {
         return CAPACITY;
     }
+    /**
+     * @brief Returns last value of array
+     * 
+     * @return T& 
+     */
     inline T& back()
     {
         return m_array[m_size-1];
     }
+    /**
+     * @brief Returns last value in array
+     * 
+     * @return const T& 
+     */
     inline const T& back() const
     {
         return m_array[m_size-1];
     }
+    /**
+     * @brief Returns first value in array
+     * 
+     * @return T& 
+     */
     inline T& front()
     {
         return m_array[0];
     }
+    /**
+     * @brief Returns first value in array
+     * 
+     * @return const T& 
+     */
     inline const T& front() const
     {
         return m_array[0];
     }
 
-    inline void pushBack(const T& t)
+    /**
+     * @brief Adds element to back of buffer and increases size
+     * 
+     * @param element
+     */
+    inline void pushBack(const T& element)
     {
-        m_array[m_size] = t;
+        m_array[m_size] = element;
         m_size++;
     }
-    inline void pushFront(const T& t)
+    /**
+     * @brief Adds element to front of buffer and increases size
+     * 
+     * @param element 
+     */
+    inline void pushFront(const T& element)
     {
         for (size_t i = m_size-1; i != SIZE_MAX; i--) 
         {
             m_array[i + 1] = m_array[i];
         }
-        m_array[0] = t;
+        m_array[0] = element;
         m_size++;
     }
+    /**
+     * @brief Removes element from back
+     * 
+     */
     inline void pop()
     {
         m_size--;
     }
-    inline void insert(size_t index, const T& t)
+    /**
+     * @brief Inserts element into array
+     * 
+     * @param index 
+     * @param element
+     */
+    inline void insert(size_t index, const T& element)
     {
         for (size_t i = m_size-1; i >= index && i != index-1u; i--) 
         {
             m_array[i + 1] = m_array[i];
         }
-        m_array[index] = t;
+        m_array[index] = element;
         m_size++;
     }
+    /**
+     * @brief Removes element from array
+     * 
+     * @param index 
+     */
     inline void erase(size_t index)
     {
         m_size--;
@@ -734,12 +899,24 @@ public:
             m_array[i] = m_array[i + 1];
         }
     }
+    /**
+     * @brief Emplaces element at the back of the buffer
+     * 
+     * @tparam ARGS 
+     * @param args 
+     */
     template<typename... ARGS>
     inline void emplaceBack(ARGS&&... args)
     {
         m_array[m_size] = T(std::forward<ARGS>(args)...);
         m_size++;
     }
+    /**
+     * @brief Emplaces element at the front of the buffer
+     * 
+     * @tparam ARGS 
+     * @param args 
+     */
     template<typename... ARGS>
     inline void emplaceFront(ARGS&&... args)
     {
@@ -750,6 +927,13 @@ public:
         m_array[0] = T(std::forward<ARGS>(args)...);
         m_size++;
     }
+    /**
+     * @brief Emplaces element at a specific element of array
+     * 
+     * @tparam ARGS 
+     * @param index 
+     * @param args 
+     */
     template<typename... ARGS>
     inline void emplace(size_t index, ARGS&&... args)
     {
@@ -762,16 +946,33 @@ public:
     }
 
 private:
+    /**
+     * @brief Container on stack
+     * 
+     */
     T m_array[CAPACITY];
+    /**
+     * @brief Size of container being used
+     * 
+     */
     size_t m_size;
 };
 
+/**
+ * @brief Prints buffer
+ * 
+ * @tparam T 
+ * @tparam CAPACITY 
+ * @param out 
+ * @param obj 
+ * @return std::ostream&
+ */
 template<typename T, size_t CAPACITY>
 std::enable_if<Printable<T>::value, 
         std::ostream&>::type
 operator<<(std::ostream &out, const Buffer<T, CAPACITY>& obj)
 {
-    out << "{ ";
+    out << "{";
     for (size_t i = 0; i < obj.size(); i++)
     {
         out << obj[i];
@@ -780,7 +981,7 @@ operator<<(std::ostream &out, const Buffer<T, CAPACITY>& obj)
             out << ", ";
         }
     }
-    out << " }";
+    out << "}";
     return out;
 }
 
