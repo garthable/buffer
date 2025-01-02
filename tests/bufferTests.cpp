@@ -226,12 +226,22 @@ TEST(BufferSet, PushFront)
     EXPECT_EQ(bufferA, bufferB);
 }
 
-TEST(BufferSet, Pop)
+TEST(BufferSet, PopBack)
 {
     sbuf::Buffer<int, 10> bufferA({1, 2, 3, 4, 5});
     sbuf::Buffer<int, 10> bufferB({1, 2, 3, 4});
 
-    bufferA.pop();
+    bufferA.popBack();
+
+    EXPECT_EQ(bufferA, bufferB);
+}
+
+TEST(BufferSet, PopFront)
+{
+    sbuf::Buffer<int, 10> bufferA({1, 2, 3, 4, 5});
+    sbuf::Buffer<int, 10> bufferB({2, 3, 4, 5});
+
+    bufferA.popFront();
 
     EXPECT_EQ(bufferA, bufferB);
 }

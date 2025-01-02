@@ -867,9 +867,21 @@ public:
      * @brief Removes element from back
      * 
      */
-    inline void pop()
+    inline void popBack()
     {
         m_size--;
+    }
+    /**
+     * @brief Removes element from front
+     * 
+     */
+    inline void popFront()
+    {
+        m_size--;
+        for (size_t i = 0; i < m_size; i++) 
+        {
+            m_array[i] = m_array[i + 1];
+        }
     }
     /**
      * @brief Inserts element into array
