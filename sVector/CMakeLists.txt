@@ -17,7 +17,7 @@
 set(LIBRARY_NAME sVector)
 
 cmake_minimum_required(VERSION 3.14)
-project(${LIBRARY_NAME} VERSION 1.0.0 LANGUAGES CXX)
+project(${LIBRARY_NAME} VERSION 0.1.0 LANGUAGES CXX)
 
 add_library(${LIBRARY_NAME} INTERFACE)
 target_include_directories(${LIBRARY_NAME} INTERFACE .)
